@@ -1,6 +1,7 @@
 import bottle
 import os
 import random
+import json
 
 
 @bottle.route('/static/<path:path>')
@@ -23,7 +24,7 @@ def start():
     # TODO: Do things with data
 
     return {
-        'color': '#00FF00',
+        'color': '#0087ff',
         'taunt': '{} ({}x{})'.format(game_id, board_width, board_height),
         'head_url': head_url,
         'name': 'battlesnake-python'
@@ -32,14 +33,37 @@ def start():
 
 @bottle.post('/move')
 def move():
+	directions = ['up', 'down', 'left', 'right']
+	
     data = bottle.request.json
-
+	
+	my_x = data["you"]["body"]["data"][0].x
+	my_y = data["you"]["body"]["data"][0].y
+	my_x_neck = data["you"]["body"]["data"][1].x
+	my_y_neck = data["you"]["body"]["data"][1].y
+	my_x_tail = data["you"]["body"]["data"][-1].x
+	my_y_tail = data["you"]["body"]["data"][-1].y
+	
+	if my_x <= 0:
+		directions.remove('left') #NOT LEFT
+		
+	elif my_x >= board_width-1:
+		directions.remove('right') #NOT RIGHT
+		
+	elif my_y <= 0:
+		directions.remove('down') #NOT DOWN
+		
+	elif my_y >= board_height-1:
+		directions.remove('up') #NOT UP
+		
+	elif my_x > my_x_tail && my_y == my_y_tail:
+		
+	
     # TODO: Do things with data
-    directions = ['up', 'down', 'left', 'right']
 
     return {
         'move': random.choice(directions),
-        'taunt': 'battlesnake-python!'
+        'taunt': 'These guys are weaker than overcooked noodles!'
     }
 
 
